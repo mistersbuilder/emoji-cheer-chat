@@ -23,6 +23,34 @@ let chats = [];
 let activeChatId = null;
 let userQuestionsCount = 0;
 
+// Настройки скорости/задержки ответа бота
+const DELAY_PRESETS = [
+  { delay: 400, label: '0.4s', icon: '⚡', title: 'Быстрый ответ (0.4 сек)' },
+  { delay: 1000, label: '1.0s', icon: '⏳', title: 'Реалистичный набор (1.0 сек)' },
+  { delay: 40, label: '0.0s', icon: '🚀', title: 'Мгновенный ответ (без задержки)' }
+];
+let currentDelayIndex = parseInt(localStorage.getItem('orqanix_delay_index') || '0', 10);
+if (isNaN(currentDelayIndex) || currentDelayIndex < 0 || currentDelayIndex >= DELAY_PRESETS.length) {
+  currentDelayIndex = 0;
+}
+
+function updateDelayUI() {
+  const label = document.getElementById('delay-label');
+  const icon = document.getElementById('delay-icon');
+  const btn = document.getElementById('delay-toggle-btn');
+  const preset = DELAY_PRESETS[currentDelayIndex];
+  if (label) label.textContent = preset.label;
+  if (icon) icon.textContent = preset.icon;
+  if (btn) btn.title = preset.title;
+}
+
+function cycleTypingDelay() {
+  currentDelayIndex = (currentDelayIndex + 1) % DELAY_PRESETS.length;
+  localStorage.setItem('orqanix_delay_index', String(currentDelayIndex));
+  updateDelayUI();
+  playPopSound();
+}
+
 // Звуковые эффекты через Web Audio API
 let audioCtx = null;
 let soundEnabled = localStorage.getItem('orqanix_sound_enabled') !== 'false';
@@ -163,6 +191,7 @@ function initApp() {
   updateStreakUI();
   updateCounterUI();
   updateSoundUI();
+  updateDelayUI();
 }
 
 function saveState() {
@@ -392,8 +421,33 @@ function handleSendMessage() {
   updateCounterUI();
   saveState();
 
-  // 2. Ответ бота через короткую задержку
+  // 2. Отображаем анимированный индикатор набора текста
+  const currentDelay = DELAY_PRESETS[currentDelayIndex].delay;
+  if (currentDelay > 60) {
+    const container = document.getElementById('messages-container');
+    const typingWrapper = document.createElement('div');
+    typingWrapper.id = 'typing-indicator-wrapper';
+    typingWrapper.className = 'message-wrapper bot';
+    typingWrapper.innerHTML = `
+      <div class="bot-row">
+        <div class="bot-content-col">
+          <div class="typing-indicator-box">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(typingWrapper);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // 3. Ответ бота после настраиваемой задержки
   setTimeout(() => {
+    const indicator = document.getElementById('typing-indicator-wrapper');
+    if (indicator) indicator.remove();
+
     let botMsg;
     // Каждый третий вопрос — мотивационный заряд
     if (userQuestionsCount % 3 === 0) {
@@ -419,7 +473,7 @@ function handleSendMessage() {
     renderMessages();
     renderSidebar();
     saveState();
-  }, 220);
+  }, currentDelay);
 }
 
 // Навешивание обработчиков событий
@@ -480,6 +534,12 @@ themeToggleBtn.addEventListener('click', () => {
   html.className = nextTheme;
   localStorage.setItem('orqanix_cheer_theme', nextTheme);
 });
+
+// Кнопка переключения задержки ответа
+const delayToggleBtn = document.getElementById('delay-toggle-btn');
+if (delayToggleBtn) {
+  delayToggleBtn.addEventListener('click', cycleTypingDelay);
+}
 
 // Кнопка экспорта чата
 const exportChatBtn = document.getElementById('export-chat-btn');
