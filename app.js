@@ -292,6 +292,35 @@ function renderMessages() {
       meta.textContent = msg.time;
       col.appendChild(meta);
 
+      // Блок интерактивных реакций на ответ бота
+      const reactionsBar = document.createElement('div');
+      reactionsBar.className = 'reactions-bar';
+      if (msg.userReaction) {
+        reactionsBar.classList.add('has-active');
+      }
+
+      const availableReactions = ['❤️', '🔥', '😂', '👏'];
+      availableReactions.forEach(emoji => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `reaction-btn ${msg.userReaction === emoji ? 'active' : ''}`;
+        btn.innerHTML = `<span>${emoji}</span>${msg.userReaction === emoji ? '<span class="reaction-count">1</span>' : ''}`;
+        btn.title = `Отреагировать ${emoji}`;
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          if (msg.userReaction === emoji) {
+            delete msg.userReaction;
+          } else {
+            msg.userReaction = emoji;
+            playPopSound();
+          }
+          saveState();
+          renderMessages();
+        };
+        reactionsBar.appendChild(btn);
+      });
+      col.appendChild(reactionsBar);
+
       row.appendChild(col);
       wrapper.appendChild(row);
     }

@@ -618,6 +618,63 @@ body {
   transform: translateY(0);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   REACTION BUTTONS FOR BOT MESSAGES
+   ═══════════════════════════════════════════════════════════════ */
+
+.reactions-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+
+.message-wrapper.bot:hover .reactions-bar,
+.reactions-bar:focus-within,
+.reactions-bar.has-active {
+  opacity: 1;
+}
+
+.reaction-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px 7px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  line-height: 1.2;
+}
+
+.reaction-btn:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--border-secondary);
+  transform: scale(1.12);
+}
+
+.reaction-btn:active {
+  transform: scale(0.95);
+}
+
+.reaction-btn.active {
+  background-color: rgba(255, 79, 0, 0.14);
+  border-color: var(--accent-orange);
+}
+
+.reaction-count {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-orange);
+}
+
 /* Адаптивность для узких экранов */
 @media (max-width: 680px) {
   .sidebar {
