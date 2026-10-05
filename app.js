@@ -5,8 +5,8 @@ const EMOJIS = [
   '🏆', '🤙', '🦄', '🦁', '💯', '🏄‍♂️', '🪐', '💎'
 ];
 
-// Набор мотивирующих фраз для каждого третьего вопроса в стиле Orqanix
-const MOTIVATIONS = [
+// Набор мотивирующих фраз по умолчанию
+const DEFAULT_MOTIVATIONS = [
   'Продолжай, я в тебя верю! 🚀',
   'Ты отлично справляешься, так держать! 💪',
   'Не останавливайся, ты на верном пути! 🌟',
@@ -17,6 +17,14 @@ const MOTIVATIONS = [
   'Твоя настойчивость вдохновляет! 🦾',
   'Каждая попытка делает тебя сильнее! 💎'
 ];
+
+let motivations = [];
+try {
+  const savedQuotes = localStorage.getItem('orqanix_custom_quotes');
+  motivations = savedQuotes ? JSON.parse(savedQuotes) : [...DEFAULT_MOTIVATIONS];
+} catch (e) {
+  motivations = [...DEFAULT_MOTIVATIONS];
+}
 
 // Состояние приложения
 let chats = [];
@@ -453,7 +461,7 @@ function handleSendMessage() {
     if (userQuestionsCount % 3 === 0) {
       botMsg = {
         role: 'bot',
-        text: getRandomItem(MOTIVATIONS),
+        text: getRandomItem(motivations),
         isMotivation: true,
         time: getCurrentTime()
       };
@@ -618,6 +626,117 @@ function exportCurrentChat() {
   URL.revokeObjectURL(url);
 
   playPopSound();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// РЕДАКТОР ФРАЗ МОТИВАЦИИ
+// ═══════════════════════════════════════════════════════════════
+
+function saveMotivations() {
+  localStorage.setItem('orqanix_custom_quotes', JSON.stringify(motivations));
+}
+
+function renderQuotesList() {
+  const listEl = document.getElementById('quotes-list');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+
+  motivations.forEach((quote, index) => {
+    const li = document.createElement('li');
+    li.className = 'quote-item';
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'quote-text';
+    textSpan.textContent = quote;
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn-delete-quote';
+    delBtn.title = 'Удалить';
+    delBtn.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+      </svg>
+    `;
+    delBtn.onclick = () => {
+      if (motivations.length <= 1) {
+        alert('Нужна хотя бы одна фраза мотивации!');
+        return;
+      }
+      motivations.splice(index, 1);
+      saveMotivations();
+      renderQuotesList();
+      playPopSound();
+    };
+
+    li.appendChild(textSpan);
+    li.appendChild(delBtn);
+    listEl.appendChild(li);
+  });
+}
+
+function openQuotesModal() {
+  const modal = document.getElementById('quotes-modal');
+  if (!modal) return;
+  renderQuotesList();
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden', 'false');
+  const input = document.getElementById('new-quote-input');
+  if (input) input.focus();
+}
+
+function closeQuotesModal() {
+  const modal = document.getElementById('quotes-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+const quotesModalBtn = document.getElementById('quotes-modal-btn');
+const closeQuotesModalBtn = document.getElementById('close-quotes-modal');
+const doneQuotesBtn = document.getElementById('done-quotes-btn');
+const resetQuotesBtn = document.getElementById('reset-quotes-btn');
+const addQuoteForm = document.getElementById('add-quote-form');
+const quotesModal = document.getElementById('quotes-modal');
+
+if (quotesModalBtn) quotesModalBtn.addEventListener('click', openQuotesModal);
+if (closeQuotesModalBtn) closeQuotesModalBtn.addEventListener('click', closeQuotesModal);
+if (doneQuotesBtn) doneQuotesBtn.addEventListener('click', closeQuotesModal);
+
+if (quotesModal) {
+  quotesModal.addEventListener('click', (e) => {
+    if (e.target === quotesModal) {
+      closeQuotesModal();
+    }
+  });
+}
+
+if (addQuoteForm) {
+  addQuoteForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('new-quote-input');
+    const val = input.value.trim();
+    if (!val) return;
+
+    motivations.unshift(val);
+    saveMotivations();
+    renderQuotesList();
+    playPopSound();
+    input.value = '';
+    input.focus();
+  });
+}
+
+if (resetQuotesBtn) {
+  resetQuotesBtn.addEventListener('click', () => {
+    if (confirm('Сбросить фразы мотивации к стандартному набору?')) {
+      motivations = [...DEFAULT_MOTIVATIONS];
+      saveMotivations();
+      renderQuotesList();
+      playPopSound();
+    }
+  });
 }
 
 // Запуск приложения

@@ -77,6 +77,13 @@
           <span class="stat-title">Всего вопросов</span>
           <span class="stat-value" id="counter-badge">0</span>
         </div>
+        <button id="quotes-modal-btn" class="sidebar-action-btn" title="Настроить фразы поддержки">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <span>Фразы мотивации</span>
+        </button>
       </div>
     </aside>
 
@@ -173,6 +180,49 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Модальное окно редактора мотивационных фраз -->
+  <div id="quotes-modal" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-row">
+          <span class="modal-icon">⚡</span>
+          <h2 class="modal-title">Фразы мотивации</h2>
+        </div>
+        <button id="close-quotes-modal" class="icon-btn" aria-label="Закрыть">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-subtitle">Эти фразы звучат каждые три вопроса. Добавляй свои персональные цитаты или удаляй ненужные.</p>
+        
+        <form id="add-quote-form" class="add-quote-form">
+          <input 
+            type="text" 
+            id="new-quote-input" 
+            class="quote-input" 
+            placeholder="Введи вдохновляющую фразу..." 
+            autocomplete="off"
+            required 
+          />
+          <button type="submit" class="btn-add-quote">Добавить</button>
+        </form>
+
+        <ul class="quotes-list" id="quotes-list">
+          <!-- Рендерится через JS -->
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <button id="reset-quotes-btn" class="btn-secondary-reset">Сбросить</button>
+        <button id="done-quotes-btn" class="btn-primary-done">Готово</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
