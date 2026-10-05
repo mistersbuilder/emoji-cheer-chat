@@ -487,6 +487,30 @@ if (exportChatBtn) {
   exportChatBtn.addEventListener('click', exportCurrentChat);
 }
 
+// Кнопка очистки истории
+const clearChatBtn = document.getElementById('clear-chat-btn');
+if (clearChatBtn) {
+  clearChatBtn.addEventListener('click', clearCurrentChat);
+}
+
+function clearCurrentChat() {
+  const activeChat = getActiveChat();
+  if (!activeChat) return;
+
+  if (confirm('Очистить сообщения в этом диалоге?')) {
+    activeChat.messages = [{
+      role: 'bot',
+      text: '👋',
+      isEmoji: true,
+      time: getCurrentTime()
+    }];
+    saveState();
+    renderMessages();
+    renderSidebar();
+    playPopSound();
+  }
+}
+
 // Экспорт текущего чата в текстовый файл
 function exportCurrentChat() {
   const activeChat = getActiveChat();
