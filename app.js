@@ -481,5 +481,60 @@ themeToggleBtn.addEventListener('click', () => {
   localStorage.setItem('orqanix_cheer_theme', nextTheme);
 });
 
+// Кнопка экспорта чата
+const exportChatBtn = document.getElementById('export-chat-btn');
+if (exportChatBtn) {
+  exportChatBtn.addEventListener('click', exportCurrentChat);
+}
+
+// Экспорт текущего чата в текстовый файл
+function exportCurrentChat() {
+  const activeChat = getActiveChat();
+  if (!activeChat || activeChat.messages.length === 0) {
+    alert('Чат пока пуст. Напишите что-нибудь перед экспортом!');
+    return;
+  }
+
+  const dateStr = new Date().toLocaleString();
+  let content = `========================================\n`;
+  content += `Orqanix Emoji & Cheer Chat — Export\n`;
+  content += `Диалог: ${activeChat.title}\n`;
+  content += `Дата экспорта: ${dateStr}\n`;
+  content += `Всего сообщений: ${activeChat.messages.length}\n`;
+  content += `========================================\n\n`;
+
+  activeChat.messages.forEach(msg => {
+    const sender = msg.role === 'user' ? 'Вы' : 'Orqanix Bot';
+    content += `[${msg.time}] ${sender}:\n`;
+    if (msg.isMotivation) {
+      content += `⚡ Мотивация: ${msg.text}\n`;
+    } else {
+      content += `${msg.text}\n`;
+    }
+    if (msg.userReaction) {
+      content += `Реакция: ${msg.userReaction}\n`;
+    }
+    content += `\n`;
+  });
+
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeTitle = (activeChat.title || 'chat')
+    .toLowerCase()
+    .replace(/[^a-z0-9а-яё_-]/gi, '_')
+    .slice(0, 30);
+  const fileName = `chat-${safeTitle}-${Date.now().toString().slice(-6)}.txt`;
+
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  playPopSound();
+}
+
 // Запуск приложения
 initApp();
