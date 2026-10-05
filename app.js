@@ -23,6 +23,110 @@ let chats = [];
 let activeChatId = null;
 let userQuestionsCount = 0;
 
+// Звуковые эффекты через Web Audio API
+let audioCtx = null;
+let soundEnabled = localStorage.getItem('orqanix_sound_enabled') !== 'false';
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playPopSound() {
+  if (!soundEnabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const now = ctx.currentTime;
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(340, now);
+  osc.frequency.exponentialRampToValueAtTime(820, now + 0.08);
+
+  gain.gain.setValueAtTime(0.22, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.12);
+}
+
+function playCheerSound() {
+  if (!soundEnabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const notes = [523.25, 659.25, 783.99, 1046.50];
+  const startTime = ctx.currentTime;
+
+  notes.forEach((freq, idx) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const noteTime = startTime + idx * 0.07;
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, noteTime);
+
+    gain.gain.setValueAtTime(0.2, noteTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.32);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(noteTime);
+    osc.stop(noteTime + 0.32);
+  });
+}
+
+function playSendSound() {
+  if (!soundEnabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const now = ctx.currentTime;
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(500, now);
+  osc.frequency.exponentialRampToValueAtTime(320, now + 0.05);
+
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.06);
+}
+
+function updateSoundUI() {
+  const onIcon = document.getElementById('sound-icon-on');
+  const offIcon = document.getElementById('sound-icon-off');
+  const btn = document.getElementById('sound-toggle');
+  if (!onIcon || !offIcon || !btn) return;
+
+  if (soundEnabled) {
+    onIcon.classList.remove('hidden');
+    offIcon.classList.add('hidden');
+    btn.title = 'Звуковые эффекты включены';
+  } else {
+    onIcon.classList.add('hidden');
+    offIcon.classList.remove('hidden');
+    btn.title = 'Звуковые эффекты отключены';
+  }
+}
+
 // Инициализация
 function initApp() {
   const savedData = localStorage.getItem('orqanix_cheer_chat_state');
@@ -58,6 +162,7 @@ function initApp() {
   renderMessages();
   updateStreakUI();
   updateCounterUI();
+  updateSoundUI();
 }
 
 function saveState() {
@@ -249,6 +354,7 @@ function handleSendMessage() {
   });
 
   userQuestionsCount++;
+  playSendSound();
   input.value = '';
   input.style.height = 'auto';
 
@@ -268,6 +374,7 @@ function handleSendMessage() {
         isMotivation: true,
         time: getCurrentTime()
       };
+      playCheerSound();
     } else {
       // Иначе смайлик
       botMsg = {
@@ -276,6 +383,7 @@ function handleSendMessage() {
         isEmoji: true,
         time: getCurrentTime()
       };
+      playPopSound();
     }
 
     activeChat.messages.push(botMsg);
@@ -290,6 +398,18 @@ const chatForm = document.getElementById('chat-form');
 const messageInput = document.getElementById('message-input');
 const newChatBtn = document.getElementById('new-chat-btn');
 const themeToggleBtn = document.getElementById('theme-toggle');
+const soundToggleBtn = document.getElementById('sound-toggle');
+
+if (soundToggleBtn) {
+  soundToggleBtn.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem('orqanix_sound_enabled', String(soundEnabled));
+    updateSoundUI();
+    if (soundEnabled) {
+      playPopSound();
+    }
+  });
+}
 
 chatForm.addEventListener('submit', (e) => {
   e.preventDefault();

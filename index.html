@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Orqanix | Emoji & Cheer Chat</title>
+  <meta name="description" content="Orqanix Emoji & Cheer Chat — a minimalist chat that responds with emoji reactions and delivers an empowering cheer boost every three messages.">
+  <meta name="theme-color" content="#141414">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- OpenGraph Social Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Orqanix | Emoji & Cheer Chat">
+  <meta property="og:description" content="A minimalist chat that responds with emojis and sends a motivational boost every three messages.">
+  <meta property="og:url" content="https://mistersbuilder.github.io/emoji-cheer-chat/">
+  <meta property="og:image" content="https://mistersbuilder.github.io/emoji-cheer-chat/og-preview.svg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Orqanix | Emoji & Cheer Chat">
+  <meta name="twitter:description" content="Minimalist cheer chat: emoji reactions and motivation boosts.">
+  <meta name="twitter:image" content="https://mistersbuilder.github.io/emoji-cheer-chat/og-preview.svg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -80,6 +97,20 @@
         </div>
 
         <div class="header-right">
+          <!-- Звуковые эффекты -->
+          <button id="sound-toggle" class="icon-btn" title="Звуковые эффекты включены" aria-label="Переключить звук">
+            <svg id="sound-icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+            <svg id="sound-icon-off" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+
           <!-- Индикатор шагов до мотивационного ответа -->
           <div class="streak-tracker" title="Шагов до мотивации">
             <span class="streak-text">Мотивация:</span>

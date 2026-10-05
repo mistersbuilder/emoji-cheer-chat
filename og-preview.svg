@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#141414"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="#1c1c1c" stroke="#262626" stroke-width="2"/>
+  
+  <!-- Logo & Title -->
+  <g transform="translate(100, 110)">
+    <rect width="56" height="56" rx="14" fill="#ff4f00"/>
+    <path d="M16 40V16L40 28L16 40Z" fill="#ffffff"/>
+    <text x="76" y="38" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="34" font-weight="700">Orqanix | Emoji Cheer Chat</text>
+  </g>
+  
+  <!-- User message mock -->
+  <g transform="translate(680, 220)">
+    <rect width="420" height="64" rx="20" fill="#ffffff"/>
+    <text x="28" y="40" fill="#141414" font-family="-apple-system, sans-serif" font-size="22" font-weight="500">Как продвигается проект?</text>
+  </g>
+  
+  <!-- Bot emoji response mock -->
+  <g transform="translate(100, 310)">
+    <rect width="90" height="80" rx="18" fill="#242424" stroke="#333333" stroke-width="1.5"/>
+    <text x="24" y="56" font-size="44">🚀</text>
+  </g>
+  
+  <!-- Motivation card mock -->
+  <g transform="translate(100, 420)">
+    <rect width="640" height="110" rx="18" fill="#201a18" stroke="#ff4f00" stroke-width="1.5"/>
+    <rect x="0" y="0" width="6" height="110" fill="#ff4f00" rx="3"/>
+    <text x="24" y="36" fill="#ff4f00" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1">⚡ ИМПУЛЬС МОТИВАЦИИ</text>
+    <text x="24" y="74" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="24" font-weight="600">Продолжай, я в тебя верю! Всё получится!</text>
+  </g>
+</svg>
