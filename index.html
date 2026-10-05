@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orqanix | Emoji & Cheer Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Боковая панель сессий в стиле Orqanix / Goose -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-row">
+          <div class="brand-badge">
+            <svg class="brand-icon" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="6" fill="#ff4f00" />
+              <path d="M7 16V8L17 12L7 16Z" fill="#ffffff" />
+            </svg>
+            <span class="brand-name">Orqanix</span>
+            <span class="brand-tag">MVP</span>
+          </div>
+          <button id="theme-toggle" class="icon-btn" title="Сменить тему">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+
+        <button id="new-chat-btn" class="btn-new-chat">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Новый диалог</span>
+          <kbd class="kbd-shortcut">⌘N</kbd>
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+        <div class="section-label">Сессии диалогов</div>
+        <ul class="session-list" id="chat-list">
+          <!-- Генерируется скриптом -->
+        </ul>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="stat-pill">
+          <span class="stat-title">Всего вопросов</span>
+          <span class="stat-value" id="counter-badge">0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Основная рабочая область чата -->
+    <main class="chat-container">
+      <!-- Минималистичный хедер сессии -->
+      <header class="chat-header">
+        <div class="header-left">
+          <div class="session-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div class="session-details">
+            <span class="session-title" id="active-chat-title">Главный диалог</span>
+            <span class="session-model">orqanix-cheer-engine · fast</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Индикатор шагов до мотивационного ответа -->
+          <div class="streak-tracker" title="Шагов до мотивации">
+            <span class="streak-text">Мотивация:</span>
+            <div class="streak-dots" id="streak-dots">
+              <div class="step-pill" data-step="1"></div>
+              <div class="step-pill" data-step="2"></div>
+              <div class="step-pill" data-step="3"></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Лента сообщений -->
+      <section class="messages-scroll" id="messages-container">
+        <!-- Сообщения генерируются скриптом -->
+      </section>
+
+      <!-- Плавающая карточка ввода в фирменном стиле ChatInputCard -->
+      <div class="composer-container">
+        <div class="composer-card">
+          <form id="chat-form" class="composer-form">
+            <textarea 
+              id="message-input" 
+              class="composer-textarea" 
+              placeholder="Пиши что на душе"
+              rows="1"
+              required
+            ></textarea>
+            <button type="submit" class="composer-send-btn" id="send-btn" aria-label="Отправить" title="Отправить">
+              <span>Отправить</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
